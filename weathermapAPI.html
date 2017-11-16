@@ -3,9 +3,51 @@
     <head>
         <title>Weather</title>
         <script src = "http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.6.2.min.js"></script>
+        <style>
+          html,body{
+            margin:0;
+            padding:0;
+            background-color: black;
+          }
+
+          #text{
+            font-family: arial;
+            color:white;
+            text-align: center;
+            font-size: 3em;
+          }
+
+          #city{
+            border: 0;
+            outline: 0;
+            background: transparent;
+            border-bottom: 1px solid white;
+            color:white;
+          }
+
+          .button {
+            display: inline-block;
+            border-radius: 4px;
+            background: transparent;
+            border: none;
+            color: #FFFFFF;
+            text-align: center;
+            font-size: 28px;
+            padding: 20px;
+            width: 200px;
+            cursor: pointer;
+            margin: 5px;
+          }
+
+          .button:hover{
+            text-decoration-line: underline;
+          }
+
+        </style>
         <!-- <script src = 'jquery-3.2.1.min.js'></script> -->
         <script>
-            let city = '';
+            gettingJSON('Charlottesville')
+            let city = 'Charlottesville';
             let temp;
 
             function getCity(){
@@ -29,10 +71,11 @@
     </head>
 
     <body>
-        <p>Enter a City:</p>
+      <div id='text'>
+        <h1>Enter a City:</h1>
         <input type="text" id="city" name="location" value="Charlottesville"><br>
-        <input type="submit" value="Submit" onClick="getCity()">
-
-        <p id="temperatureOutput"> The temperature in [city] is </p>
+        <a onclick="getCity()" class="button" style="vertical-align:middle"><span>Submit </span></a>
+        <p id="temperatureOutput"> </p>
+      </div>
     </body>
 </html>
