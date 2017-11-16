@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Weather</title>
+        <script src = "http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.6.2.min.js"></script>
+        <!-- <script src = 'jquery-3.2.1.min.js'></script> -->
+        <script>
+            let city = '';
+            let temp;
+
+            function getCity(){
+              city = document.getElementById("city").value;;
+              gettingJSON(city)
+            }
+
+            function gettingJSON(city){
+                $.getJSON('http://api.openweathermap.org/data/2.5/weather?q='+city+'&appid=9e575b3e1c5f2cc65878a9984b11e4d4&units=imperial',function(json){
+                  console.log(json.main.temp);
+                  output(json.main.temp);
+            });
+            }
+
+            function output(temp){
+              $('#temperatureOutput').text('The temperature in '+city+' is '+ temp);
+              //console.log(1+1);
+            }
+
+        </script>
+    </head>
+
+    <body>
+        <p>Enter a City:</p>
+        <input type="text" id="city" name="location" value="Charlottesville"><br>
+        <input type="submit" value="Submit" onClick="getCity()">
+
+        <p id="temperatureOutput"> The temperature in [city] is </p>
+    </body>
+</html>
