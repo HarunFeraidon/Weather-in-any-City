@@ -3,36 +3,131 @@
     <head>
         <title>Weather</title>
         <script src = "http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.6.2.min.js"></script>
+        <style>
+          html,body{
+            margin:0;
+            padding:0;
+            width: 100%;
+            height: 100%;
+            background-color: black;
+            background: no-repeat center center fixed;
+            background-size: cover;
+          }
+
+          #text{
+            font-family: arial;
+            color:white;
+            text-align: center;
+            font-size: 3em;
+          }
+
+          #city{
+            border: 0;
+            outline: 0;
+            background: transparent;
+            border-bottom: 1px solid white;
+            color:white;
+          }
+
+          .button {
+            display: inline-block;
+            border-radius: 4px;
+            background: transparent;
+            border: none;
+            color: #FFFFFF;
+            text-align: center;
+            font-size: 28px;
+            padding: 20px;
+            width: 200px;
+            cursor: pointer;
+            margin: 5px;
+          }
+
+          .button:hover{
+            text-decoration-line: underline;
+          }
+
+          #top{
+            display: inline-block;
+          }
+
+          input[type="text"]{
+              font-size:48px;
+          }
+
+          ul,li{
+            list-style: none;
+          }
+
+        </style>
         <!-- <script src = 'jquery-3.2.1.min.js'></script> -->
         <script>
-            let city = '';
+            gettingJSON('Charlottesville');
+            gettingFlickrJSON('Charlottesville');
+            let city = 'Charlottesville';
             let temp;
 
             function getCity(){
               city = document.getElementById("city").value;;
-              gettingJSON(city)
+              gettingJSON(city);
+              gettingFlickrJSON(city)
             }
 
             function gettingJSON(city){
                 $.getJSON('http://api.openweathermap.org/data/2.5/weather?q='+city+'&appid=9e575b3e1c5f2cc65878a9984b11e4d4&units=imperial',function(json){
                   console.log(json.main.temp);
-                  output(json.main.temp);
+                  temperatureOutput(json.main.temp);
+                  skyOutput(json.weather[0].main);
+                  humidityOutput(json.main.humidity);
+                  tempMinOutput(json.main.temp_min);
+                  tempMaxOutput(json.main.temp_max);
             });
             }
 
-            function output(temp){
-              $('#temperatureOutput').text('The temperature in '+city+' is '+ temp);
-              //console.log(1+1);
+            function temperatureOutput(temp){
+              $('#temperature').text('Temperature: '+ temp + ' F');
+            }
+            function skyOutput(sky){
+              $('#sky').text('Sky: ' + sky);
+            }
+            function humidityOutput(humidity){
+              $('#humidity').text('Humidity: ' + humidity+'%');
+            }
+            function tempMinOutput(tempMin){
+              $('#tempMin').text('Low: ' + tempMin + ' F');
+            }
+            function tempMaxOutput(tempMax){
+              $('#tempMax').text('High: ' + tempMax+' F');
             }
 
+
+            function gettingFlickrJSON(city){
+                let photoIndex = Math.floor(Math.random() * 30);
+                $.getJSON('https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=d293702bddac032f1687d9a78c009792&tags='+city+'&text='+city+'&sort=relevance&tag_mode=all&per_page=30&format=json&nojsoncallback=1',function(json){
+                  var image = json.photos.photo[photoIndex];
+                  var imageURL = 'https://farm'+image.farm+'.staticflickr.com/'+image.server+'/'+image.id+'_'+image.secret+'.jpg';
+                  console.log(imageURL);
+                  document.getElementById('body').style.backgroundImage = 'url(https://farm'+image.farm+'.staticflickr.com/'+image.server+'/'+image.id+'_'+image.secret+'.jpg)';
+                });
+            }
         </script>
     </head>
 
-    <body>
-        <p>Enter a City:</p>
-        <input type="text" id="city" name="location" value="Charlottesville"><br>
-        <input type="submit" value="Submit" onClick="getCity()">
-
-        <p id="temperatureOutput"> The temperature in [city] is </p>
+    <body id='body'>
+      <div id='text'>
+        <div id="top">
+          <br />
+          <input style="display: inline-block;" type="text" id="city" name="location" placeholder="Enter City"><br>
+          <a style="display: inline-block;" onclick="getCity()" class="button" style="vertical-align:middle"><span>Submit </span></a>
+        </div>
+        <ul>
+          <li id=temperature> </li>
+          <li id=sky> </li>
+          <li id=humidity> </li>
+          <li id=high> </li>
+          <li id=tempMin> </li>
+          <li id=tempMax> </li>
+        </ul>
+      </div>
     </body>
 </html>
